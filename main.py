@@ -47,7 +47,7 @@ class RulesPage(ctk.CTkFrame):
             ('Я загадываю число от 1 до 100', lex.TXT_COLOR_2),
             ('А ты пытаешься его отгадать,', lex.TXT_COLOR_1),
             ('вводя свои варианты чисел', lex.TXT_COLOR_2),
-            ('У тебя 8 попыток', lex.TXT_COLOR_1),
+            ('У тебя несколько попыток', lex.TXT_COLOR_1),
             ('Начнём?', lex.TXT_COLOR_2)
         ]
 
@@ -108,19 +108,25 @@ class GamePage(ctk.CTkFrame):
         super().__init__(master, fg_color = lex.FRM_COLOR)
         self.controller = controller
 
+        self.labels = {}
+
         label_data = [
-            ('Введи любое число', lex.TXT_COLOR_1),
-            ('от 1 до 100', lex.TXT_COLOR_2)
+            (None, 'Введи любое число', lex.TXT_COLOR_1, 0.1),
+            (None, 'от 1 до 100', lex.TXT_COLOR_2, 0.25),
+            ('step_label', '', lex.TXT_COLOR_1, 0.55),
+            ('comment_label', '', lex.TXT_COLOR_2, 0.7),
+            ('used_label', '', lex.TXT_COLOR_1, 0.85)
         ]
 
-        for idx, (text, color) in enumerate (label_data):
+        for idx, (name, text, color, rely) in enumerate (label_data):
             label = ctk.CTkLabel(
                 self,
                 text = text,
                 text_color = color,
                 font = ('Constantia', 30)
             )
-            label.place(relx = 0.5, rely = 0.1 + (idx * 0.15), anchor = 'c')
+            label.place(relx = 0.5, rely = rely, anchor = 'c')
+            if name: self.labels[name] = label
 
         self.entry = ctk.CTkEntry(
             self,
@@ -150,30 +156,6 @@ class GamePage(ctk.CTkFrame):
             )
             button.place(relx = 0.25 + (idx * 0.5), rely = 0.4, anchor = 'c')
 
-        self.step_label = ctk.CTkLabel(
-            self,
-            text = '',
-            text_color = lex.TXT_COLOR_2,
-            font = ('Constantia', 30)
-            )
-        self.step_label.place(relx = 0.5, rely = 0.55, anchor = 'c')
-
-        self.comment_label = ctk.CTkLabel(
-            self,
-            text = '',
-            text_color = lex.TXT_COLOR_1,
-            font = ('Constantia', 30)
-            )
-        self.comment_label.place(relx = 0.5, rely = 0.7, anchor = 'c')
-
-        self.used_label = ctk.CTkLabel(
-            self,
-            text = '',
-            text_color = lex.TXT_COLOR_2,
-            font = ('Constantia', 30)
-            )
-        self.used_label.place(relx = 0.5, rely = 0.85, anchor = 'c')
-
     def send_input(self):
         self.controller.transfer_data(self.entry.get())
 
@@ -193,13 +175,16 @@ class GamePage(ctk.CTkFrame):
             self.controller.switch_to('FinalPage')
             return
 
-        self.comment_label.configure(text=choice(lex.GAME_WORDS[status]))
-        self.step_label.configure(text=f'Осталось попыток: {info["step"]}')
-        self.used_label.configure(text=info['used'])
+        self.labels['comment_label'].configure(text=choice(lex.GAME_WORDS[status]))
+        self.labels['step_label'].configure(text=f'Осталось попыток: {info["step"]}')
+        self.labels['used_label'].configure(text=info['used'])
         self.clear_entry()
 
-    def show_step(self):
-        self.step_label.configure(text = 'Осталось попыток: 8')
+    def update_ui(self, step):
+        self.clear_entry()
+        self.labels['step_label'].configure(text=f'Осталось попыток: {step}')
+        self.labels['comment_label'].configure(text='')
+        self.labels['used_label'].configure(text='')
 
     def clear_entry(self):
         self.entry.delete (0, 'end')
@@ -213,29 +198,26 @@ class FinalPage(ctk.CTkFrame):
         super().__init__(master, fg_color = lex.FRM_COLOR)
         self.controller = controller
 
-        self.comment_label = ctk.CTkLabel(
-            self,
-            text = 'ssss',
-            text_color = lex.TXT_COLOR_1,
-            font = ('Constantia', 27)
-        )
-        self.comment_label.place(relx = 0.5, rely = 0.2, anchor = 'c')
+        self.labels = {}
 
-        self.label = ctk.CTkLabel(
-            self,
-            text = 'aaaaa',
-            text_color = lex.TXT_COLOR_2,
-            font = ('Constantia', 27)
-        )
-        self.label.place(relx = 0.5, rely = 0.4, anchor = 'c')
+        label_data = [
+            ('comment_label', "", lex.TXT_COLOR_1),
+            ('text_label', "Искомое число:", lex.TXT_COLOR_2),
+            ('num_label', "", lex.TXT_COLOR_1),
+            ('used_label', "", lex.TXT_COLOR_2),
+            ('count_label', "", lex.TXT_COLOR_1),
+            ('again_label', "Хотите повторить?", lex.TXT_COLOR_2)
+        ]
 
-        self.num_label = ctk.CTkLabel(
-            self,
-            text = 'zzzz',
-            text_color = lex.TXT_COLOR_1,
-            font = ('Constantia', 27)
-        )
-        self.num_label.place(relx = 0.5, rely = 0.6, anchor = 'c')
+        for idx, (name, text, color) in enumerate(label_data):
+            label = ctk.CTkLabel(
+                self,
+                text=text,
+                text_color = color,
+                font= ('Constantia', 27)
+            )
+            label.place(relx = 0.5, rely = 0.1 + (idx * 0.14), anchor = 'c')
+            self.labels[name] = label
 
         button_data = [
             ('Не хочу', self.controller.end_game),
@@ -249,17 +231,23 @@ class FinalPage(ctk.CTkFrame):
                 command = command,
                 **lex.BTN_PARAMS
             )
-            button.place(relx = 0.35 + (idx * 0.3), rely = 0.8, anchor = 'c')
+            button.place(relx = 0.35 + (idx * 0.3), rely = 0.9, anchor = 'c')
 
     def get_result(self, status, info):
-        self.comment_label.configure(text = choice(lex.WIN_WORDS)) if status == 'win' else self.comment_label.configure(text = 'Все попытки потрачены')
+        labels = self.labels
+        comment_text = choice(lex.FINAL_WORDS[status])
+        used_text = f'Использованные числа:\n{info["used"]}'
+        count_text = f'Потрачено попыток: {info["spent_steps"]}'
+
+        labels['comment_label'].configure(text=comment_text)
+        labels['num_label'].configure(text=info['num'])
+        labels['used_label'].configure(text = used_text)
+        labels['count_label'].configure(text = count_text)
 
 class MainLogic():
     def __init__(self):
-        self.step = 8
-        self.num = randint(1, 100)
-        self.used_digits = []
-        print (self.num)
+        self.max_steps = 8
+        self.update_variables()
 
     def check_input(self, user_input):
         if not user_input:
@@ -281,29 +269,34 @@ class MainLogic():
     def analyze_the_number(self, user_input):
         error_status = self.check_input(user_input)
         if error_status:
-            return error_status, None
+            return error_status, {}
 
         user_num = int(user_input)
         self.used_digits.append(user_num)
         self.step -= 1
 
-        if user_num == self.num:
-            return 'win', None
-        if self.step == 0:
-            return 'lose', None
-
-        game_info = {
+        info = {
             'step': self.step,
-            'used': self.used_digits,
-            'num': self.num
+            'used': ", ".join(map(str, self.used_digits)),
+            'num': self.num,
+            'spent_steps': self.max_steps - self.step
         }
 
+        if user_num == self.num:
+            return 'win', info
+        if self.step == 0:
+            return 'lose', info
         if user_num > self.num:
             status = 'too near high' if (user_num - self.num) <= 5 else 'too high'
         else:
             status = 'too near low' if (self.num - user_num) <= 5 else 'too low'
 
-        return status, game_info
+        return status, info
+
+    def update_variables(self):
+        self.step = self.max_steps
+        self.num = randint(1, 100)
+        self.used_digits = []
 
 class MainApp(ctk.CTk):
     def __init__(self):
@@ -321,7 +314,10 @@ class MainApp(ctk.CTk):
 
         self.pages = {}
         self.current_frame = None
-        for F in (GreetingsPage, RulesPage, GamePage, FinalPage, FarewellPage, LoadingPage):
+        for F in (
+            GreetingsPage, RulesPage, GamePage,
+            FinalPage, FarewellPage, LoadingPage
+        ):
             page_name = F.__name__
             self.pages[page_name] = F(master = self.main_frame, controller=self)
         self.switch_to("GreetingsPage")
@@ -342,8 +338,9 @@ class MainApp(ctk.CTk):
     def create_game(self):
         self.pages['LoadingPage'].update_loading_words()
         self.switch_to('LoadingPage')
-        self.pages['GamePage'].show_step()
-        self.after(3000, lambda: (self.switch_to('GamePage'), self.pages['GamePage'].clear_entry()))
+        self.main_logic.update_variables()
+        self.pages['GamePage'].update_ui(self.main_logic.step)
+        self.after(3000, lambda: (self.switch_to('GamePage')))
 
     def end_game(self):
         self.switch_to('FarewellPage')
