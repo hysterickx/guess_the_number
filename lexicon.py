@@ -103,5 +103,3 @@ FINAL_WORDS = {
     'win': WIN_WORDS,
     'lose': LOSE_WORDS
 }
-
-#testing
