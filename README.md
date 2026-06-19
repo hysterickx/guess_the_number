@@ -32,5 +32,5 @@ An interactive, logic-based desktop game built with Python and CustomTkinter. Th
    ```
 3. Run the application:
    ```bash
-   python main.py
+   python draft.py
    ```

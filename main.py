@@ -1,170 +1,100 @@
 import customtkinter as ctk
 from random import randint, choice
 from CTkMessagebox import CTkMessagebox
-import lexicon as lex
+import config as cfg
 
 
-class GreetingsPage(ctk.CTkFrame):
-    def __init__(self, master, controller):
-        super().__init__(master, fg_color=lex.FRM_COLOR)
-        self.controller = controller
+class StaticPages(ctk.CTkFrame):
+    def __init__(self, master, controller, page_name):
+        super().__init__(master, fg_color=cfg.COLOR_DARK)
 
-        label_data = [
-            ('Привет! Это угадайка чисел', lex.TXT_COLOR_1),
-            ('Хочешь сыграть?', lex.TXT_COLOR_2)
-        ]
+        page_config = cfg.STATIC_PAGES_DATA[page_name]
+        label_data = page_config['labels']
+        button_data = page_config['buttons']
 
-        for idx, (text, color) in enumerate (label_data):
-            label = ctk.CTkLabel (
+        for text, color, font, rely in label_data:
+            label = ctk.CTkLabel(
                 self,
-                text = text,
-                text_color = color,
-                font = ('Constantia', 27)
+                text=text,
+                text_color=color,
+                font=font
             )
-            label.place(relx = 0.5, rely = 0.35 + (idx * 0.2), anchor = 'c')
+            label.place(relx=0.5, rely=rely, anchor='c')
 
-        button_data = [
-            ('Не хочу', self.controller.end_game),
-            ('Давай!', lambda: self.controller.switch_to('RulesPage'))
-        ]
+        command_data = {
+            'exit': controller.exit_app,
+            'next': lambda: controller.switch_to('RulesPage'),
+            'start': controller.create_app
+        }
 
-        for idx, (text, command) in enumerate (button_data):
-            button = ctk.CTkButton (
+        for text, command_key, relx in button_data:
+            button = ctk.CTkButton(
                 self,
-                text = text,
-                command = command,
-                **lex.BTN_PARAMS
+                text=text,
+                command=command_data[command_key],
+                **cfg.BTN_PARAMS
             )
-            button.place(relx = 0.35 + (idx * 0.3), rely = 0.8, anchor = 'c')
+            button.place(relx=relx, rely=0.9, anchor='c')
 
-class RulesPage(ctk.CTkFrame):
-    def __init__(self, master, controller):
-        super().__init__(master, fg_color = lex.FRM_COLOR)
-        self.controller = controller
-
-        label_data = [
-            ('Правила очень простые:', lex.TXT_COLOR_1),
-            ('Я загадываю число от 1 до 100', lex.TXT_COLOR_2),
-            ('А ты пытаешься его отгадать,', lex.TXT_COLOR_1),
-            ('вводя свои варианты чисел', lex.TXT_COLOR_2),
-            ('У тебя несколько попыток', lex.TXT_COLOR_1),
-            ('Начнём?', lex.TXT_COLOR_2)
-        ]
-
-        for idx, (text, color) in enumerate (label_data):
-            label = ctk.CTkLabel (
-                self,
-                text = text,
-                text_color = color,
-                font = ('Constantia', 27)
-            )
-            label.place(relx = 0.5, rely = 0.1 + (idx * 0.13), anchor = 'c')
-
-        button_data = [
-            ('Не сейчас', self.controller.end_game),
-            ('Поехали', self.controller.create_game)
-        ]
-
-        for idx, (text, command) in enumerate (button_data):
-            button = ctk.CTkButton (
-                self,
-                text = text,
-                command = command,
-                **lex.BTN_PARAMS
-            )
-            button.place(relx = 0.35 + (idx * 0.3), rely = 0.9, anchor = 'c')
-
-class FarewellPage(ctk.CTkFrame):
-    def __init__(self, master, controller):
-        super().__init__(master, fg_color = lex.FRM_COLOR)
-        self.controller = controller
-
-        label = ctk.CTkLabel(
-            self,
-            text = choice(lex.FAREWELL_WORDS),
-            text_color = lex.TXT_COLOR_1,
-            font = ('Constantia', 27)
-        )
-        label.place(relx = 0.5, rely = 0.5, anchor = 'c')
-
-class LoadingPage(ctk.CTkFrame):
-    def __init__(self, master, controller):
-        super().__init__(master, fg_color = lex.FRM_COLOR)
-        self.controller = controller
-
-        self.label = ctk.CTkLabel(
-            self,
-            text = '',
-            text_color = lex.TXT_COLOR_1,
-            font = ('Constantia', 27)
-        )
-        self.label.place(relx = 0.5, rely = 0.5, anchor = 'c')
-
-    def update_loading_words(self):
-        self.label.configure(text = choice(lex.LOADING_WORDS))
 
 class GamePage(ctk.CTkFrame):
     def __init__(self, master, controller):
-        super().__init__(master, fg_color = lex.FRM_COLOR)
+        super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
         self.labels = {}
 
         label_data = [
-            (None, 'Введи любое число', lex.TXT_COLOR_1, 0.1),
-            (None, 'от 1 до 100', lex.TXT_COLOR_2, 0.25),
-            ('step_label', '', lex.TXT_COLOR_1, 0.55),
-            ('comment_label', '', lex.TXT_COLOR_2, 0.7),
-            ('used_label', '', lex.TXT_COLOR_1, 0.85)
+            (None, 'Введи любое число', cfg.COLOR_LIME, 0.1),
+            (None, 'от 1 до 100', cfg.COLOR_WHITE, 0.25),
+            ('step_label', '', cfg.COLOR_LIME, 0.55),
+            ('comment_label', '', cfg.COLOR_WHITE, 0.7),
+            ('used_label', '', cfg.COLOR_LIME, 0.85)
         ]
 
-        for idx, (name, text, color, rely) in enumerate (label_data):
+        for idx, (name, text, color, rely) in enumerate(label_data):
             label = ctk.CTkLabel(
                 self,
-                text = text,
-                text_color = color,
-                font = ('Constantia', 30)
+                text=text,
+                text_color=color,
+                font=cfg.FONT_LARGE
             )
-            label.place(relx = 0.5, rely = rely, anchor = 'c')
+            label.place(relx=0.5, rely=rely, anchor='c')
             if name: self.labels[name] = label
 
         self.entry = ctk.CTkEntry(
             self,
-            width = 100,
-            height = 30,
-            corner_radius = 40,
-            justify = 'c',
-            text_color = '#66ff33',
-            font = ('Cambria', 27)
+            **cfg.ENT_PARAMS
         )
-        self.entry.place(relx = 0.5, rely = 0.4, anchor = 'c')
+        self.entry.place(relx=0.5, rely=0.4, anchor='c')
 
-        button_data = [('←', self.clear_input), ('→', self.send_input)]
+        button_data = [
+            ('←', self.clear_input),
+            ('→', self.send_input)
+        ]
 
-        for idx, (text, command) in enumerate (button_data):
+        for idx, (text, command) in enumerate(button_data):
             button = ctk.CTkButton(
                 self,
-                text = text,
-                command = command,
-                height = 30,
-                width = 120,
-                corner_radius = 15,
-                fg_color = lex.BTN_COLOR_1,
-                hover_color = lex.BTN_COLOR_2,
-                text_color = lex.BTN_COLOR_3,
-                font = ('Constantia', 20)
+                text=text,
+                command=command,
+                **cfg.LONG_BTN_PARAMS
             )
-            button.place(relx = 0.25 + (idx * 0.5), rely = 0.4, anchor = 'c')
+            button.place(
+                relx=0.25 + (idx * 0.5),
+                rely=0.4,
+                anchor='c'
+            )
 
     def send_input(self):
         self.controller.transfer_data(self.entry.get())
 
     def get_status(self, status, info):
-        if status in lex.ERROR_MESSAGES:
-            error_message = CTkMessagebox (
+        if status in cfg.ERROR_MESSAGES:
+            error_message = CTkMessagebox(
                 app,
-                **lex.MSG_PARAMS,
-                message = lex.ERROR_MESSAGES[status]
+                **cfg.MSG_PARAMS,
+                message=cfg.ERROR_MESSAGES[status]
             )
             app.wait_window(error_message)
             self.clear_entry()
@@ -175,74 +105,108 @@ class GamePage(ctk.CTkFrame):
             self.controller.switch_to('FinalPage')
             return
 
-        self.labels['comment_label'].configure(text=choice(lex.GAME_WORDS[status]))
-        self.labels['step_label'].configure(text=f'Осталось попыток: {info["step"]}')
-        self.labels['used_label'].configure(text=info['used'])
+
+        comment_lbl = self.labels['comment_label']
+        step_lbl = self.labels['step_label']
+        used_lbl = self.labels['used_label']
+
+        comment_lbl.configure(text=choice(cfg.GAME_WORDS[status]))
+        step_lbl.configure(text=f'Осталось попыток: {info["step"]}')
+        used_lbl.configure(text=info['used'])
         self.clear_entry()
 
     def update_ui(self, step):
         self.clear_entry()
-        self.labels['step_label'].configure(text=f'Осталось попыток: {step}')
+        step_lbl = self.labels['step_label']
+        step_lbl.configure(text=f'Осталось попыток: {step}')
         self.labels['comment_label'].configure(text='')
         self.labels['used_label'].configure(text='')
 
     def clear_entry(self):
-        self.entry.delete (0, 'end')
+        self.entry.delete(0, 'end')
         self.entry.focus_set()
 
     def clear_input(self):
-        self.entry.delete (len(self.entry.get()) - 1)
+        self.entry.delete(len(self.entry.get()) - 1)
 
 class FinalPage(ctk.CTkFrame):
     def __init__(self, master, controller):
-        super().__init__(master, fg_color = lex.FRM_COLOR)
+        super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
         self.labels = {}
 
         label_data = [
-            ('comment_label', "", lex.TXT_COLOR_1),
-            ('text_label', "Искомое число:", lex.TXT_COLOR_2),
-            ('num_label', "", lex.TXT_COLOR_1),
-            ('used_label', "", lex.TXT_COLOR_2),
-            ('count_label', "", lex.TXT_COLOR_1),
-            ('again_label', "Хотите повторить?", lex.TXT_COLOR_2)
+            ('comment_label', "", cfg.COLOR_LIME),
+            ('text_label', "Искомое число:", cfg.COLOR_WHITE),
+            ('num_label', "", cfg.COLOR_LIME),
+            ('used_label', "", cfg.COLOR_WHITE),
+            ('count_label', "", cfg.COLOR_LIME),
+            ('again_label', "Хотите повторить?", cfg.COLOR_WHITE)
         ]
 
         for idx, (name, text, color) in enumerate(label_data):
             label = ctk.CTkLabel(
                 self,
                 text=text,
-                text_color = color,
-                font= ('Constantia', 27)
+                text_color=color,
+                font=cfg.FONT_LARGE
             )
-            label.place(relx = 0.5, rely = 0.1 + (idx * 0.14), anchor = 'c')
+            label.place(
+                relx=0.5,
+                rely=0.1 + (idx * 0.14),
+                anchor='c'
+            )
             self.labels[name] = label
 
         button_data = [
-            ('Не хочу', self.controller.end_game),
-            ('Давай!', self.controller.create_game)
+            ('Не хочу', self.controller.exit_app),
+            ('Давай!', self.controller.create_app)
         ]
 
-        for idx, (text, command) in enumerate (button_data):
-            button = ctk.CTkButton (
+        for idx, (text, command) in enumerate(button_data):
+            button = ctk.CTkButton(
                 self,
-                text = text,
-                command = command,
-                **lex.BTN_PARAMS
+                text=text,
+                command=command,
+                **cfg.BTN_PARAMS
             )
-            button.place(relx = 0.35 + (idx * 0.3), rely = 0.9, anchor = 'c')
+            button.place(
+                relx=0.35 + (idx * 0.3),
+                rely=0.9,
+                anchor='c'
+            )
 
     def get_result(self, status, info):
         labels = self.labels
-        comment_text = choice(lex.FINAL_WORDS[status])
+        comment_text = choice(cfg.FINAL_WORDS[status])
         used_text = f'Использованные числа:\n{info["used"]}'
         count_text = f'Потрачено попыток: {info["spent_steps"]}'
 
         labels['comment_label'].configure(text=comment_text)
         labels['num_label'].configure(text=info['num'])
-        labels['used_label'].configure(text = used_text)
-        labels['count_label'].configure(text = count_text)
+        labels['used_label'].configure(text=used_text)
+        labels['count_label'].configure(text=count_text)
+
+
+class MessagePage(ctk.CTkFrame):
+    def __init__(self, master, controller):
+        super().__init__(master, fg_color=cfg.COLOR_DARK)
+        self.controller = controller
+
+        self.label = ctk.CTkLabel(
+            self,
+            text='',
+            text_color=cfg.COLOR_LIME,
+            font=cfg.FONT_MEDIUM
+        )
+        self.label.place(relx=0.5, rely=0.5, anchor='c')
+
+    def change_message(self, status):
+        self.label.configure(
+            text=choice(cfg.ACTIVE_MESSAGES[status])
+        )
+
 
 class MainLogic():
     def __init__(self):
@@ -287,9 +251,15 @@ class MainLogic():
         if self.step == 0:
             return 'lose', info
         if user_num > self.num:
-            status = 'too near high' if (user_num - self.num) <= 5 else 'too high'
+            if (user_num - self.num) <= 5:
+                status = 'too near high'
+            else:
+                status = 'too high'
         else:
-            status = 'too near low' if (self.num - user_num) <= 5 else 'too low'
+            if (self.num - user_num) <= 5:
+                status = 'too near low'
+            else:
+                status = 'too low'
 
         return status, info
 
@@ -303,23 +273,38 @@ class MainApp(ctk.CTk):
         super().__init__()
 
         self.title('Угадай число')
-        self.geometry ('600x500+800+450')
-        self.resizable (False, False)
-        self.attributes ('-alpha', 0.8)
+        self.geometry('600x500+800+450')
+        self.resizable(False, False)
+        self.attributes('-alpha', 0.8)
 
         self.main_frame = ctk.CTkFrame(self)
-        self.main_frame.pack(fill = 'both', expand = True)
+        self.main_frame.pack(fill='both', expand=True)
 
         self.main_logic = MainLogic()
 
         self.pages = {}
         self.current_frame = None
-        for F in (
-            GreetingsPage, RulesPage, GamePage,
-            FinalPage, FarewellPage, LoadingPage
-        ):
-            page_name = F.__name__
-            self.pages[page_name] = F(master = self.main_frame, controller=self)
+        page_types = [
+            (cfg.STATIC_PAGES_DATA, StaticPages),
+            (None, GamePage),
+            (None, FinalPage),
+            (None, MessagePage),
+        ]
+
+        for config_dict, page_class in page_types:
+            if config_dict is not None:
+                for page_name in config_dict.keys():
+                    self.pages[page_name] = page_class(
+                        master=self.main_frame,
+                        controller=self,
+                        page_name=page_name
+                    )
+            else:
+                page_name = page_class.__name__
+                self.pages[page_name] = page_class(
+                    master=self.main_frame,
+                    controller=self
+                )
         self.switch_to("GreetingsPage")
 
     def switch_to(self, page_name):
@@ -335,15 +320,16 @@ class MainApp(ctk.CTk):
     def transfer_final_data(self, status, info):
         self.pages['FinalPage'].get_result(status, info)
 
-    def create_game(self):
-        self.pages['LoadingPage'].update_loading_words()
-        self.switch_to('LoadingPage')
+    def create_app(self):
+        self.pages['MessagePage'].change_message('loading')
+        self.switch_to('MessagePage')
         self.main_logic.update_variables()
         self.pages['GamePage'].update_ui(self.main_logic.step)
         self.after(3000, lambda: (self.switch_to('GamePage')))
 
-    def end_game(self):
-        self.switch_to('FarewellPage')
+    def exit_app(self):
+        self.pages['MessagePage'].change_message('farewell')
+        self.switch_to('MessagePage')
         self.after(3000, self.destroy)
 
 
