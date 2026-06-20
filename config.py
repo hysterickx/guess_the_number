@@ -16,6 +16,12 @@ ENT_PARAMS = {
     "font": FONT_LARGE
 }
 
+ENT_PLACE = {
+    "relx": 0.5,
+    "rely": 0.4,
+    "anchor": 'c'
+}
+
 BTN_PARAMS = {
     "height": 40,
     'width': 50,
@@ -47,88 +53,75 @@ MSG_PARAMS = {
     "button_text_color": COLOR_BLACK
 }
 
-LOW_WORDS = [
-    'Пока что маловато',
-    'Маловато, давай еше',
-    'Бери выше',
-    'Нет, я загадал число побольше'
-]
-
-HIGH_WORDS = [
-    'Тихо, тихо, не так много',
-    'Что-то ты лишканул немножко',
-    'Давай-ка поменьше',
-    'Многовато',
-    'Бери ниже'
-]
-
-VERY_NEAR_LOW_WORDS = [
-    'Совсем рядом! Возьми выше',
-    'Почти у цели! Возьми чуть больше',
-    'Почти угадал, чуть выше!'
-]
-
-VERY_NEAR_HIGH_WORDS = [
-    'Очень близко! Давай ниже',
-    'Еще чуть-чуть! Ниже',
-    'Горячо! Чуть ниже'
-]
-
-GAME_WORDS = {
-    'too high': HIGH_WORDS,
-    'too low': LOW_WORDS,
-    'too near high': VERY_NEAR_HIGH_WORDS,
-    'too near low': VERY_NEAR_LOW_WORDS
-}
-
-WIN_WORDS = [
-    'Красавчик, это оно!',
-    'В точку. Ты победил!',
-    'Число угадано!',
-    'Поздравляю!',
-    'Это победа. Ура!'
-]
-
-LOSE_WORDS = [
-    'Все попытки потрачены!',
-    'В этот раз не повезло...',
-    'В следующий раз точно получится!',
-    'Увы, лимит исчерпан...',
-    'Мимо! Число победило...'
-]
-
-FINAL_WORDS = {
-    'win': WIN_WORDS,
-    'lose': LOSE_WORDS
-}
-
 STATIC_PAGES_DATA = {
     'GreetingsPage': {
         'labels': [
-            ('Привет! Это угадайка чисел', COLOR_LIME, FONT_LARGE, 0.4),
-            ('Хочешь сыграть?', COLOR_WHITE, FONT_LARGE, 0.6)
+            ('Привет! Это угадайка чисел', COLOR_LIME, FONT_LARGE, 0.5, 0.3),
+            ('Хочешь сыграть?', COLOR_WHITE, FONT_LARGE, 0.5, 0.5)
         ],
         'buttons': [
-            ('Не хочу', 'exit', 0.35),
-            ('Давай!', 'next', 0.65),
+            ('Не хочу', 'exit_app', 0.35, 0.7),
+            ('Давай!', 'RulesPage', 0.65, 0.7),
         ]
     },
     'RulesPage': {
         'labels': [
-            ('Правила очень простые:', COLOR_LIME, FONT_MEDIUM, 0.05),
-            ('Я загадываю число от 1 до 100', COLOR_WHITE, FONT_MEDIUM, 0.2),
-            ('А ты пытаешься его отгадать,', COLOR_LIME, FONT_MEDIUM, 0.35),
-            ('вводя свои варианты чисел', COLOR_WHITE, FONT_MEDIUM, 0.5),
-            ('У тебя несколько попыток', COLOR_LIME, FONT_MEDIUM, 0.65),
-            ('Начнём?', COLOR_WHITE, FONT_MEDIUM, 0.8)
+            ('Правила очень простые:', COLOR_LIME, FONT_MEDIUM, 0.5, 0.05),
+            ('Я загадываю число от 1 до 100', COLOR_WHITE, FONT_MEDIUM, 0.5, 0.2),
+            ('А ты пытаешься его отгадать,', COLOR_LIME, FONT_MEDIUM, 0.5, 0.35),
+            ('вводя свои варианты чисел', COLOR_WHITE, FONT_MEDIUM, 0.5, 0.5),
+            ('У тебя несколько попыток', COLOR_LIME, FONT_MEDIUM, 0.5, 0.65),
+            ('Начнём?', COLOR_WHITE, FONT_MEDIUM, 0.5, 0.8)
         ],
         'buttons': [
-            ('Отлично', 'start', 0.5)
+            ('Отлично', 'create_app', 0.5, 0.9)
         ]
     }
 }
 
-ACTIVE_MESSAGES = {
+GAME_PAGE_DATA = {
+    'labels': [
+        (None, 'Введи любое число', COLOR_LIME, FONT_LARGE, 0.5, 0.1),
+        (None, 'от 1 до 100', COLOR_WHITE, FONT_LARGE, 0.5, 0.25),
+        ('step_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.55),
+        ('comment_label', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.7),
+        ('used_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.85)
+    ],
+    'buttons': [
+        ('←', 'clear', 0.25, 0.4),
+        ('→', 'enter', 0.75, 0.4)
+    ]
+}
+
+
+FINAL_PAGE_DATA = {
+    'labels': [
+        ('comment_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.1),
+        ('text_label', "Искомое число:", COLOR_WHITE, FONT_LARGE, 0.5, 0.24),
+        ('num_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.38),
+        ('used_label', "", COLOR_WHITE, FONT_LARGE, 0.5, 0.52),
+        ('count_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.66),
+        ('again_label', "Хотите повторить?", COLOR_WHITE, FONT_LARGE, 0.5, 0.8)
+    ],
+    'buttons': [
+        ('Не хочу', 'exit_app', 0.35, 0.9),
+        ('Давай!', 'create_app', 0.65, 0.9)
+    ]
+}
+
+MESSAGE_PAGE_DATA = {
+    'text': '',
+    'text_color': COLOR_LIME,
+    'font': FONT_MEDIUM
+}
+
+MESSAGE_PAGE_PLACE = {
+    'relx': 0.5,
+    'rely': 0.5,
+    'anchor': 'c'
+}
+
+DELAY_MESSAGES = {
     'waiting': [
         'Жду ответа от сервера...', 'Посылаю запрос...',
         'Нужно немного подождать...', 'Дай-ка подумать...',
@@ -152,8 +145,48 @@ ACTIVE_MESSAGES = {
 
 ERROR_MESSAGES = {
     'empty': 'В поле пусто',
-    'too many': 'Слишком много символов',
-    'not a digit': 'Допускаются только цифры',
-    'out of range': 'Введите число от 1 до 100 включительно',
-    'it was': 'Это число уже вводилось'
+    'too_many': 'Слишком много символов',
+    'not_a_digit': 'Допускаются только цифры',
+    'out_of_range': 'Введите число от 1 до 100 включительно',
+    'it_was': 'Это число уже вводилось'
+}
+
+GAME_MESSAGES = {
+    'too_low': [
+        'Пока что маловато',
+        'Маловато, давай еше',
+        'Бери выше',
+        'Нет, я загадал число побольше'
+    ],
+    'too_high': [
+        'Тихо, тихо, не так много',
+        'Что-то ты лишканул немножко',
+        'Давай-ка поменьше',
+        'Многовато',
+        'Бери ниже'
+    ],
+    'near_low': [
+        'Совсем рядом! Возьми выше',
+        'Почти у цели! Возьми чуть больше',
+        'Почти угадал, чуть выше!'
+    ],
+    'near_high': [
+        'Очень близко! Давай ниже',
+        'Еще чуть-чуть! Ниже',
+        'Горячо! Чуть ниже'
+    ],
+    'win': [
+        'Красавчик, это оно!',
+        'В точку. Ты победил!',
+        'Число угадано!',
+        'Поздравляю!',
+        'Это победа. Ура!'
+    ],
+    'lose': [
+        'Все попытки потрачены!',
+        'В этот раз не повезло...',
+        'В следующий раз точно получится!',
+        'Увы, лимит исчерпан...',
+        'Мимо! Число победило...'
+    ]
 }
