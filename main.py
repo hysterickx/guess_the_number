@@ -25,7 +25,8 @@ class StaticPages(ctk.CTkFrame):
             button = ctk.CTkButton(
                 self,
                 text=text,
-                command=lambda cmd=command_key: controller.handle_command(cmd),
+                command=lambda cmd=command_key: \
+                    controller.handle_command(cmd),
                 **cfg.BTN_PARAMS
             )
             button.place(relx=relx, rely=rely, anchor='c')
@@ -36,7 +37,7 @@ class GamePage(ctk.CTkFrame):
         super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
-        self.labels = {}
+        labels = {}
 
         label_data = cfg.GAME_PAGE_DATA['labels']
 
@@ -48,7 +49,12 @@ class GamePage(ctk.CTkFrame):
                 font=font
             )
             label.place(relx=relx, rely=rely, anchor='c')
-            if name: self.labels[name] = label
+            if name: labels[name] = label
+
+        self.comment_lbl = labels['comment_label']
+        self.step_lbl = labels['step_label']
+        self.used_lbl = labels['used_label']
+        self.static_txt = cfg.GAME_PAGE_DATA['static_text']
 
         self.entry = ctk.CTkEntry(
             self,
@@ -77,7 +83,10 @@ class GamePage(ctk.CTkFrame):
             )
 
     def send_input(self):
-        self.controller.handle_command('transfer_data', self.entry.get())
+        self.controller.handle_command(
+            'transfer_data',
+            self.entry.get()
+        )
 
     def get_status(self, status, info):
         if status in cfg.ERROR_MESSAGES:
@@ -91,24 +100,28 @@ class GamePage(ctk.CTkFrame):
             return
 
         if status in ('win', 'lose'):
-            self.controller.handle_command('transfer_final_data', status, info)
+            self.controller.handle_command(
+                'transfer_final_data',
+                status, info
+            )
             return
 
-        comment_lbl = self.labels['comment_label']
-        step_lbl = self.labels['step_label']
-        used_lbl = self.labels['used_label']
-
-        comment_lbl.configure(text=choice(cfg.GAME_MESSAGES[status]))
-        step_lbl.configure(text=f'Осталось попыток: {info["step"]}')
-        used_lbl.configure(text=info['used'])
+        self.comment_lbl.configure(
+            text=choice(cfg.GAME_MESSAGES[status])
+        )
+        self.step_lbl.configure(
+            text=f'{self.static_txt} {info["step"]}'
+        )
+        self.used_lbl.configure(text=info['used'])
         self.clear_entry()
 
     def update_ui(self, step):
         self.clear_entry()
-        step_lbl = self.labels['step_label']
-        step_lbl.configure(text=f'Осталось попыток: {step}')
-        self.labels['comment_label'].configure(text='')
-        self.labels['used_label'].configure(text='')
+        self.step_lbl.configure(
+            text=f'{self.static_txt} {step}'
+        )
+        self.comment_lbl.configure(text='')
+        self.used_lbl.configure(text='')
 
     def clear_entry(self):
         self.entry.delete(0, 'end')
@@ -123,7 +136,7 @@ class FinalPage(ctk.CTkFrame):
         super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
-        self.labels = {}
+        labels = {}
 
         label_data = cfg.FINAL_PAGE_DATA['labels']
 
@@ -139,15 +152,22 @@ class FinalPage(ctk.CTkFrame):
                 rely=rely,
                 anchor='c'
             )
-            self.labels[name] = label
+            labels[name] = label
 
+        self.comment_lbl = labels['comment_label']
+        self.num_lbl = labels['num_label']
+        self.used_lbl = labels['used_label']
+        self.count_lbl = labels['count_label']
+        self.used_numbers_txt = cfg.FINAL_PAGE_DATA['used_numbers']
+        self.spent_steps_txt = cfg.FINAL_PAGE_DATA['spent_steps']
         button_data = cfg.FINAL_PAGE_DATA['buttons']
 
         for text, command_key, relx, rely in button_data:
             button = ctk.CTkButton(
                 self,
                 text=text,
-                command=lambda cmd=command_key: controller.handle_command(cmd),
+                command=lambda cmd=command_key: \
+                    controller.handle_command(cmd),
                 **cfg.BTN_PARAMS
             )
             button.place(
@@ -157,19 +177,16 @@ class FinalPage(ctk.CTkFrame):
             )
 
     def get_result(self, status, info):
-        comment_lbl = self.labels['comment_label']
-        num_lbl = self.labels['num_label']
-        used_lbl = self.labels['used_label']
-        count_lbl = self.labels['count_label']
-        comment_text = choice(cfg.GAME_MESSAGES[status])
+        num_txt = info['num']
+        comment_txt = choice(cfg.GAME_MESSAGES[status])
         used_numbers = ", ".join(map(str, info['used']))
-        used_text = f'Использованные числа:\n{used_numbers}'
-        count_text = f'Потрачено попыток: {info["spent_steps"]}'
+        used_txt = f'{self.used_numbers_txt}\n{used_numbers}'
+        count_txt = f'{self.spent_steps_txt}{info["spent_steps"]}'
 
-        comment_lbl.configure(text=comment_text)
-        num_lbl.configure(text=info['num'])
-        used_lbl.configure(text=used_text)
-        count_lbl.configure(text=count_text)
+        self.comment_lbl.configure(text=comment_txt)
+        self.num_lbl.configure(text=num_txt)
+        self.used_lbl.configure(text=used_txt)
+        self.count_lbl.configure(text=count_txt)
 
 
 class MessagePage(ctk.CTkFrame):
@@ -305,7 +322,9 @@ class MainApp(ctk.CTk):
         self.switch_to(target)
 
     def transfer_data(self, user_input):
-        status, info = self.main_logic.analyze_the_number(user_input)
+        status, info = self.main_logic.analyze_the_number(
+            user_input
+        )
         self.pages['GamePage'].get_status(status, info)
 
     def transfer_final_data(self, status, info):

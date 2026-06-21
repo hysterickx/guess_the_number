@@ -8,28 +8,28 @@ FONT_MEDIUM = ('Constantia', 25)
 FONT_SMALL = ('Constantia', 20)
 
 ENT_PARAMS = {
-    "width": 100,
-    "height": 30,
-    "border_width": 0,
-    "corner_radius": 40,
-    "justify": 'c',
-    "font": FONT_LARGE
+    'width': 100,
+    'height': 30,
+    'border_width': 0,
+    'corner_radius': 40,
+    'justify': 'c',
+    'font': FONT_LARGE
 }
 
 ENT_PLACE = {
-    "relx": 0.5,
-    "rely": 0.4,
-    "anchor": 'c'
+    'relx': 0.5,
+    'rely': 0.4,
+    'anchor': 'c'
 }
 
 BTN_PARAMS = {
-    "height": 40,
+    'height': 40,
     'width': 50,
-    "corner_radius": 50,
-    "fg_color": COLOR_LIME,
-    "hover_color": COLOR_WHITE,
-    "text_color": COLOR_BLACK,
-    "font": FONT_SMALL
+    'corner_radius': 50,
+    'fg_color': COLOR_LIME,
+    'hover_color': COLOR_WHITE,
+    'text_color': COLOR_BLACK,
+    'font': FONT_SMALL
 }
 
 LONG_BTN_PARAMS = {
@@ -43,14 +43,14 @@ LONG_BTN_PARAMS = {
 }
 
 MSG_PARAMS = {
-    "width": 300,
-    "height": 150,
-    "title": 'Ошибочка',
-    "icon": 'info',
-    "justify": 'center',
-    "button_color": COLOR_WHITE,
-    "button_hover_color": COLOR_LIME,
-    "button_text_color": COLOR_BLACK
+    'width': 300,
+    'height': 150,
+    'title': 'Ошибочка',
+    'icon': 'info',
+    'justify': 'center',
+    'button_color': COLOR_WHITE,
+    'button_hover_color': COLOR_LIME,
+    'button_text_color': COLOR_BLACK
 }
 
 STATIC_PAGES_DATA = {
@@ -90,23 +90,26 @@ GAME_PAGE_DATA = {
     'buttons': [
         ('←', 'clear', 0.25, 0.4),
         ('→', 'enter', 0.75, 0.4)
-    ]
+    ],
+    'static_text': 'Осталось попыток:'
 }
 
 
 FINAL_PAGE_DATA = {
     'labels': [
-        ('comment_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.1),
-        ('text_label', "Искомое число:", COLOR_WHITE, FONT_LARGE, 0.5, 0.24),
-        ('num_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.38),
-        ('used_label', "", COLOR_WHITE, FONT_LARGE, 0.5, 0.52),
-        ('count_label', "", COLOR_LIME, FONT_LARGE, 0.5, 0.66),
-        ('again_label', "Хотите повторить?", COLOR_WHITE, FONT_LARGE, 0.5, 0.8)
+        ('comment_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.1),
+        ('text_label', 'Искомое число:', COLOR_WHITE, FONT_LARGE, 0.5, 0.24),
+        ('num_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.38),
+        ('used_label', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.52),
+        ('count_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.66),
+        ('again_label', 'Хотите повторить?', COLOR_WHITE, FONT_LARGE, 0.5, 0.8)
     ],
     'buttons': [
         ('Не хочу', 'exit_app', 0.35, 0.9),
         ('Давай!', 'create_app', 0.65, 0.9)
-    ]
+    ],
+    'used_numbers': 'Использованные числа:',
+    'spent_steps': 'Потрачено попыток:'
 }
 
 MESSAGE_PAGE_DATA = {
