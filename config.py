@@ -83,26 +83,26 @@ GAME_PAGE_DATA = {
     'labels': [
         (None, 'Введи любое число', COLOR_LIME, FONT_LARGE, 0.5, 0.1),
         (None, 'от 1 до 100', COLOR_WHITE, FONT_LARGE, 0.5, 0.25),
-        ('step_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.55),
-        ('comment_label', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.7),
-        ('used_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.85)
+        ('step_lbl', '', COLOR_LIME, FONT_LARGE, 0.5, 0.55),
+        ('comment_lbl', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.7),
+        ('used_lbl', '', COLOR_LIME, FONT_LARGE, 0.5, 0.85)
     ],
     'buttons': [
-        ('←', 'clear', 0.25, 0.4),
-        ('→', 'enter', 0.75, 0.4)
+        ('←', 'delete_last_char', 0.25, 0.4),
+        ('→', 'send_input', 0.75, 0.4)
     ],
-    'static_text': 'Осталось попыток:'
+    'static_txt': 'Осталось попыток:'
 }
 
 
 FINAL_PAGE_DATA = {
     'labels': [
-        ('comment_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.1),
-        ('text_label', 'Искомое число:', COLOR_WHITE, FONT_LARGE, 0.5, 0.24),
-        ('num_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.38),
-        ('used_label', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.52),
-        ('count_label', '', COLOR_LIME, FONT_LARGE, 0.5, 0.66),
-        ('again_label', 'Хотите повторить?', COLOR_WHITE, FONT_LARGE, 0.5, 0.8)
+        ('comment_lbl', '', COLOR_LIME, FONT_LARGE, 0.5, 0.1),
+        ('text_lbl', 'Искомое число:', COLOR_WHITE, FONT_LARGE, 0.5, 0.24),
+        ('num_lbl', '', COLOR_LIME, FONT_LARGE, 0.5, 0.38),
+        ('used_lbl', '', COLOR_WHITE, FONT_LARGE, 0.5, 0.52),
+        ('count_lbl', '', COLOR_LIME, FONT_LARGE, 0.5, 0.66),
+        ('again_lbl', 'Хотите повторить?', COLOR_WHITE, FONT_LARGE, 0.5, 0.8)
     ],
     'buttons': [
         ('Не хочу', 'exit_app', 0.35, 0.9),

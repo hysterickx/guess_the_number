@@ -37,7 +37,9 @@ class GamePage(ctk.CTkFrame):
         super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
-        labels = {}
+        self.txt_1 = cfg.GAME_PAGE_DATA['static_txt']
+
+        self.labels = {}
 
         label_data = cfg.GAME_PAGE_DATA['labels']
 
@@ -49,12 +51,7 @@ class GamePage(ctk.CTkFrame):
                 font=font
             )
             label.place(relx=relx, rely=rely, anchor='c')
-            if name: labels[name] = label
-
-        self.comment_lbl = labels['comment_label']
-        self.step_lbl = labels['step_label']
-        self.used_lbl = labels['used_label']
-        self.static_txt = cfg.GAME_PAGE_DATA['static_text']
+            if name: self.labels[name] = label
 
         self.entry = ctk.CTkEntry(
             self,
@@ -62,18 +59,13 @@ class GamePage(ctk.CTkFrame):
         )
         self.entry.place(**cfg.ENT_PLACE)
 
-        command_map = {
-            'clear': self.delete_last_char,
-            'enter': self.send_input
-        }
-
         button_data = cfg.GAME_PAGE_DATA['buttons']
 
-        for text, command_key, relx, rely in button_data:
+        for text, command, relx, rely in button_data:
             button = ctk.CTkButton(
                 self,
                 text=text,
-                command=command_map[command_key],
+                command=getattr(self, command),
                 **cfg.LONG_BTN_PARAMS
             )
             button.place(
@@ -106,22 +98,22 @@ class GamePage(ctk.CTkFrame):
             )
             return
 
-        self.comment_lbl.configure(
+        self.labels['comment_lbl'].configure(
             text=choice(cfg.GAME_MESSAGES[status])
         )
-        self.step_lbl.configure(
-            text=f'{self.static_txt} {info["step"]}'
+        self.labels['step_lbl'].configure(
+            text=f'{self.txt_1} {info["step"]}'
         )
-        self.used_lbl.configure(text=info['used'])
+        self.labels['used_lbl'].configure(text=info['used'])
         self.clear_entry()
 
     def update_ui(self, step):
         self.clear_entry()
-        self.step_lbl.configure(
-            text=f'{self.static_txt} {step}'
+        self.labels['step_lbl'].configure(
+            text=f'{self.txt_1} {step}'
         )
-        self.comment_lbl.configure(text='')
-        self.used_lbl.configure(text='')
+        self.labels['comment_lbl'].configure(text='')
+        self.labels['used_lbl'].configure(text='')
 
     def clear_entry(self):
         self.entry.delete(0, 'end')
@@ -136,8 +128,10 @@ class FinalPage(ctk.CTkFrame):
         super().__init__(master, fg_color=cfg.COLOR_DARK)
         self.controller = controller
 
-        labels = {}
+        self.txt_1 = cfg.FINAL_PAGE_DATA['used_numbers']
+        self.txt_2 = cfg.FINAL_PAGE_DATA['spent_steps']
 
+        self.labels = {}
         label_data = cfg.FINAL_PAGE_DATA['labels']
 
         for name, text, color, font, relx, rely in label_data:
@@ -152,14 +146,8 @@ class FinalPage(ctk.CTkFrame):
                 rely=rely,
                 anchor='c'
             )
-            labels[name] = label
+            self.labels[name] = label
 
-        self.comment_lbl = labels['comment_label']
-        self.num_lbl = labels['num_label']
-        self.used_lbl = labels['used_label']
-        self.count_lbl = labels['count_label']
-        self.used_numbers_txt = cfg.FINAL_PAGE_DATA['used_numbers']
-        self.spent_steps_txt = cfg.FINAL_PAGE_DATA['spent_steps']
         button_data = cfg.FINAL_PAGE_DATA['buttons']
 
         for text, command_key, relx, rely in button_data:
@@ -180,13 +168,13 @@ class FinalPage(ctk.CTkFrame):
         num_txt = info['num']
         comment_txt = choice(cfg.GAME_MESSAGES[status])
         used_numbers = ", ".join(map(str, info['used']))
-        used_txt = f'{self.used_numbers_txt}\n{used_numbers}'
-        count_txt = f'{self.spent_steps_txt}{info["spent_steps"]}'
+        used_txt = f'{self.txt_1}\n{used_numbers}'
+        count_txt = f'{self.txt_2}{info["spent_steps"]}'
 
-        self.comment_lbl.configure(text=comment_txt)
-        self.num_lbl.configure(text=num_txt)
-        self.used_lbl.configure(text=used_txt)
-        self.count_lbl.configure(text=count_txt)
+        self.labels['comment_lbl'].configure(text=comment_txt)
+        self.labels['num_lbl'].configure(text=num_txt)
+        self.labels['used_lbl'].configure(text=used_txt)
+        self.labels['count_lbl'].configure(text=count_txt)
 
 
 class MessagePage(ctk.CTkFrame):
